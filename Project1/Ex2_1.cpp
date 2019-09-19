@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
 
 	unsigned char threshold = 100;
 
-	IplImage* img1 = cvLoadImage("C:/Users/30330/Documents/Spassere/Project1/moment_test4.png");
+	IplImage* img1 = cvLoadImage("C:/Users/30330/Documents/Spassere/Project1/moment_test3.png");
 	//IplImage* img1 = cvLoadImage("C:/Users/30330/Documents/Exercises/PEN.pgm");
 	IplImage* imgThresh = 0;
 	IplImage* imgHist = 0; // pointers to hist image
@@ -85,10 +85,11 @@ int main(int argc, char* argv[]) {
 	printf("COM: (%d, %d)\n", com.x, com.y);
 
 	/* Part 3 - Image moments */
-	float u_20, u_02, u_11;
-	u_20 = computeMoment(imgThresh, 2, 0, com);
-	u_02 = computeMoment(imgThresh, 0, 2, com);
-	u_11 = computeMoment(imgThresh, 1, 1, com);
+	float M_00, u_20, u_02, u_11;
+	M_00 = computeMoment(imgThresh, 0, 0);
+	u_20 = computeMoment(imgThresh, 2, 0, com) / M_00;
+	u_02 = computeMoment(imgThresh, 0, 2, com) / M_00;
+	u_11 = computeMoment(imgThresh, 1, 1, com) / M_00;
 	printf("%.2f   %.2f   %.2f\n", u_20, u_02, u_11);
 
 	float u_2 = u_20 + u_02;
