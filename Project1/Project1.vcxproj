@@ -122,6 +122,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Ex1_3.cpp" />
+    <ClCompile Include="GitTest.cpp" />
     <ClCompile Include="SpasserBib.cpp" />
   </ItemGroup>
   <ItemGroup>

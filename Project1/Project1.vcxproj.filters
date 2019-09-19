@@ -21,6 +21,9 @@
     <ClCompile Include="SpasserBib.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GitTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SpasserBib.h">
