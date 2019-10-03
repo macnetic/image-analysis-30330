@@ -2,7 +2,7 @@
 
 IplImage* histogram(IplImage* img, uint8_t colSel){
 	unsigned char value = 0; // index value for the histogram (not really needed) 
-	unsigned long histogram[256]; // histogram array - remember to set to zero initially 
+	long histogram[256]; // histogram array - remember to set to zero initially 
 	int width; // say, 320 
 	int height; // say, 240
 	int i;
@@ -46,7 +46,7 @@ IplImage* histogram(IplImage* img, uint8_t colSel){
 	//cvLine(img1, P1, P2, Col, 1, 8, 0);
 
 	//Find max:
-	unsigned long max = 0;
+	long max = 0;
 	for (i = 0; i < 256; i++) {
 		if (histogram[i] > max){
 			max = histogram[i];
@@ -60,4 +60,40 @@ IplImage* histogram(IplImage* img, uint8_t colSel){
 		P2.x++;
 	}
 	return imgHist;
+}
+
+int cmpfunc(const void * a, const void * b) {
+	return (*(uint8_t*)a - *(uint8_t*)b);
+}
+
+void computeMedian(IplImage* img, IplImage* imgResult) {
+	uint8_t n = 1;
+
+	int32_t x, y;
+	int16_t k, l;
+	int32_t idx;
+	uint8_t vectorIdx;
+	uint8_t filterSize = (2 * n + 1)*(2 * n + 1);
+
+	uint8_t ValueVect[9]; //NOTE! THe number is filterSize, i.e. filterSize = (2 * n + 1)*(2 * n + 1);
+
+	for (y = n; y < img->height - n; y++) {
+		for (x = n; x < img->width - n; x++) {
+			vectorIdx = 0;
+			for (l = -n; l <= n; l++) {
+				for (k = -n; k <= n; k++) {
+					idx = img->width * (y - l) + (x - k);
+
+					ValueVect[vectorIdx] = ((uint8_t)img->imageData[idx]);
+					vectorIdx++;
+				}
+			}
+
+			qsort(ValueVect, filterSize, sizeof(uint8_t), cmpfunc);
+
+			idx = img->width*y + x;
+
+			imgResult->imageData[idx] = ValueVect[filterSize / 2]; //(filterSize/2) Gives middle of odd vector
+		}
+	}
 }

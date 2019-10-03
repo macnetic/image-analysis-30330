@@ -8,7 +8,7 @@
 
 float computeMoment(IplImage* img, int j, int k, CvPoint center = { 0, 0 })
 {
-	unsigned int w = img->width, h = img->height;
+	int w = img->width, h = img->height;
 
 	double moment = 0;
 
