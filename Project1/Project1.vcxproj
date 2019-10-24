@@ -124,6 +124,7 @@
     <ClCompile Include="Ex2_1.cpp" />
     <ClCompile Include="Ex3_1.cpp" />
     <ClCompile Include="Ex4.cpp" />
+    <ClCompile Include="Ex5.cpp" />
     <ClCompile Include="SpasserBib.cpp" />
   </ItemGroup>
   <ItemGroup>

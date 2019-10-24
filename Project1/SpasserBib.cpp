@@ -97,3 +97,52 @@ void computeMedian(IplImage* img, IplImage* imgResult) {
 		}
 	}
 }
+
+void initCorrRegion(Corr_Region_Type* CorrRegion, uint16_t xL, uint16_t yL, uint8_t width, uint8_t height) {
+	CorrRegion->xL = xL;
+	CorrRegion->yL = yL;
+	CorrRegion->width = width;
+	CorrRegion->height = height;
+
+	for (uint8_t i = 0; i < MAX_AREAS; i++) { //Note the i< XXX is hardcoded! Should be avoided!
+		CorrRegion->xR[i] = 0;
+		CorrRegion->yR[i] = 0;
+		CorrRegion->corrMeas[i] = 0;
+	}
+}
+
+void CorrSearch(Corr_Region_Type* Corr_Region, IplImage* img_Left_G, IplImage* img_Right_G, uint64_t threshold) {
+	uint32_t idxL = 0, idxR = 0;
+	uint8_t Region_Count = 0;
+	uint64_t Region_Count_TEST = 10000000;
+
+	for (uint16_t y = 0; (y < img_Right_G->height - Corr_Region->height) && (Region_Count < MAX_AREAS); y++) {
+		for (uint16_t x = 0; (x < img_Right_G->width - Corr_Region->width) && (Region_Count < MAX_AREAS); x++) {
+			for (uint8_t l = 0; l < Corr_Region->height; l++) {
+				for (uint8_t k = 0; k < Corr_Region->width; k++) {
+					idxL = (Corr_Region->xL + img_Left_G->width * Corr_Region->yL) + (k + l * img_Right_G->width);
+					idxR = (x + img_Right_G->width * y) + (k + l * img_Right_G->width);
+
+					Corr_Region->corrMeas[Region_Count] += abs((int)img_Left_G->imageData[idxL] - (int)img_Right_G->imageData[idxR]);
+
+
+				}
+			}
+			/* TEST CODE*/
+			if (Corr_Region->corrMeas[Region_Count] < Region_Count_TEST) {
+				Region_Count_TEST = Corr_Region->corrMeas[Region_Count];
+				printf("Region_Count_TEST = %ld \n", Region_Count_TEST);
+			}
+
+			if (Corr_Region->corrMeas[Region_Count] < threshold) {
+				Corr_Region->xR[Region_Count] = x;
+				Corr_Region->yR[Region_Count] = y;
+				Region_Count++;
+			}
+			else {
+				Corr_Region->corrMeas[Region_Count] = 0;
+			}
+
+		}
+	}
+}
